@@ -5,6 +5,11 @@ describe("encode", () => {
   it("should treat unested objects the same way that querystring.stringify() would", () => {
     expect(encode({ name: "nick", job: "programmer" })).to.equal("name=nick&job=programmer");
   });
+  it("includes empty strings in the resultant query string", () => {
+    expect(encode({ name: "nick", job: "programmer", complaint: "" })).to.equal(
+      "name=nick&job=programmer&complaint="
+    );
+  });
   it("allow multiple values to be set for a given key", () => {
     expect(encode({ name: ["nick"], job: ["programmer", "software"] })).to.equal(
       "name=nick&job=programmer&job=software"
@@ -27,9 +32,16 @@ describe("encode", () => {
   });
 });
 
-describe.only("decode", () => {
+describe("decode", () => {
   it("return an object of key/value pairs", () => {
     expect(decode("name=nick&job=programmer")).to.deep.equal({ name: "nick", job: "programmer" });
+  });
+  it("treats a key missing a value as an empty string", () => {
+    expect(decode("name=nick&job=programmer&complaint=")).to.deep.equal({
+      name: "nick",
+      job: "programmer",
+      complaint: ""
+    });
   });
   it("return an array of values if the same key appears multiple times", () => {
     expect(decode("name=nick&name=programmer")).to.deep.equal({ name: ["nick", "programmer"] });
@@ -40,9 +52,9 @@ describe.only("decode", () => {
       page: "10"
     });
   });
-  it.only("should allow for objects nested to arbitrary depth", () => {
-    expect(decode("a.b.c=good&a.b.c=best&a.b2=hi&page=10")).to.deep.equal({
-      a: { b: { c: ["good", "best"] }, b2: "hi" },
+  it("should allow for objects nested to arbitrary depth", () => {
+    expect(decode("a.b.c=good&a.b.c=best&a.b.c=awesome&a.b2=hi&page=10")).to.deep.equal({
+      a: { b: { c: ["good", "best", "awesome"] }, b2: "hi" },
       page: "10"
     });
   });

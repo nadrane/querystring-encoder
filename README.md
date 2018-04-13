@@ -6,7 +6,7 @@ Encode nested objects into query strings in a readable AND safe format.
 
 Today, numerous modules/strategies exist to encode query strings. They all have one of two flaws:
 
-1.  They do encode nested objects, but they delimit nesting using unsafe URL characters, resulting in url string that look like this (straight from the [qs](https://www.npmjs.com/package/qs) documentation):
+1.  They do encode nested objects, but they delimit nesting using unsafe URL characters, resulting in url string that looks like this (straight from the [qs](https://www.npmjs.com/package/qs) documentation):
 
 `a%5Bb%5D=c`
 
